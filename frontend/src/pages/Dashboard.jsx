@@ -3,7 +3,7 @@ import StatCard from '../components/StatCard';
 import ToolCard from '../components/ToolCard';
 import RecentActivity from '../components/RecentActivity';
 
-export default function Dashboard({ setActiveNav, atsScore, latestMatchScore }) {
+export default function Dashboard({ setActiveNav, atsScore, latestMatchScore, skillsToImprove }) {
   return (
     <div className="dashboard-content">
       <WelcomeCard onAnalyzeClick={() => setActiveNav('resume')} />
@@ -11,7 +11,7 @@ export default function Dashboard({ setActiveNav, atsScore, latestMatchScore }) 
       <section className="stats-grid">
         <StatCard value={atsScore !== null ? atsScore : "--"} label="ATS Readiness" />
         <StatCard value={latestMatchScore !== null ? `${latestMatchScore}%` : "N/A"} label="Latest Match" />
-        <StatCard value="--" label="Skills to Improve" />
+        <StatCard value={skillsToImprove !== null ? skillsToImprove : "--"} label="Skills to Improve" />
         <StatCard value="--" label="Latest Session" />
       </section>
       
@@ -34,6 +34,7 @@ export default function Dashboard({ setActiveNav, atsScore, latestMatchScore }) 
             title="Skill Gap Advisor" 
             description="Find the skills you need to improve for your target role." 
             buttonText="Explore Skills" 
+            onClick={() => setActiveNav('skills')}
           />
           <ToolCard 
             title="Interview Prep" 

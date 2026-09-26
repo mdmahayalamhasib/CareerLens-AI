@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { analyzeJob } from '../api';
 import JobMatchCard from '../components/JobMatchCard';
 
-export default function JobMatcher({ resumeData, setLatestMatchScore, setActiveNav }) {
+export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJobData, setActiveNav }) {
   const [jobDescription, setJobDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,6 +43,9 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setActiveN
       setResult(data);
       if (setLatestMatchScore && data.match) {
         setLatestMatchScore(data.match.match_score);
+      }
+      if (setGlobalJobData && data.job) {
+        setGlobalJobData(data.job);
       }
     } catch (err) {
       setError(err.message);

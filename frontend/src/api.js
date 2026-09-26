@@ -85,3 +85,59 @@ export async function analyzeJob(jobDescription, resumeData) {
     throw error;
   }
 }
+
+export async function analyzeSkillGap(resumeData, jobData) {
+  try {
+    const response = await fetch(`${BASE_URL}/skills/gap-analysis`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resume_data: resumeData, job_data: jobData }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during skill gap analysis.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status} ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') {
+      throw new Error('Unable to connect to the CareerLens AI backend. Please make sure the FastAPI server is running.');
+    }
+    throw error;
+  }
+}
+
+export async function getCareerRecommendations(skillGaps) {
+  try {
+    const response = await fetch(`${BASE_URL}/career/recommendations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skill_gaps: skillGaps }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred while fetching career recommendations.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status} ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') {
+      throw new Error('Unable to connect to the CareerLens AI backend. Please make sure the FastAPI server is running.');
+    }
+    throw error;
+  }
+}
