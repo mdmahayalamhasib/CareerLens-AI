@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from pydantic import BaseModel, field_validator
 
 from resume_parser import (
     extract_text,
@@ -8,11 +9,35 @@ from resume_parser import (
 
 from resume_analyzer import analyze_resume
 
+from job_analyzer import (
+    analyze_job_description,
+    match_resume_to_job,
+)
+
 
 app = FastAPI(title="CareerLens AI")
 
 
 MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
+
+
+class JobAnalyzeRequest(BaseModel):
+    job_description: str
+    resume_data: dict
+
+    @field_validator("job_description")
+    @classmethod
+    def job_description_must_not_be_empty(cls, value: str) -> str:
+        if not value or not value.strip():
+            raise ValueError("job_description must not be empty.")
+        return value
+
+    @field_validator("resume_data")
+    @classmethod
+    def resume_data_must_not_be_empty(cls, value: dict) -> dict:
+        if not isinstance(value, dict) or not value:
+            raise ValueError("resume_data must be a non-empty object.")
+        return value
 
 
 @app.get("/")
@@ -82,4 +107,24 @@ async def upload_resume(file: UploadFile = File(...)):
         "extracted_text": extracted_text,
         "resume_data": resume_data,
         "character_count": len(extracted_text),
+    }
+
+
+@app.post("/job/analyze")
+async def analyze_job(request: JobAnalyzeRequest):
+
+    # Analyze job description
+    job_data = analyze_job_description(
+        request.job_description
+    )
+
+    # Match resume against analyzed job
+    match_result = match_resume_to_job(
+        request.resume_data,
+        job_data,
+    )
+
+    return {
+        "job": job_data,
+        "match": match_result,
     }
