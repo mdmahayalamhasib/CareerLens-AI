@@ -6,6 +6,8 @@ from resume_parser import (
     EmptyResumeError,
 )
 
+from resume_analyzer import analyze_resume
+
 
 app = FastAPI(title="CareerLens AI")
 
@@ -72,8 +74,12 @@ async def upload_resume(file: UploadFile = File(...)):
             detail="Could not process this file. It may be corrupted.",
         )
 
+    # Analyze extracted resume text
+    resume_data = analyze_resume(extracted_text)
+
     return {
         "filename": file.filename,
         "extracted_text": extracted_text,
+        "resume_data": resume_data,
         "character_count": len(extracted_text),
     }
