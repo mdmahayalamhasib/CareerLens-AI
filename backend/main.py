@@ -23,7 +23,17 @@ from cover_letter_generator import create_cover_letter
 from resume_quality_analyzer import analyze_resume_quality
 
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="CareerLens AI")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB

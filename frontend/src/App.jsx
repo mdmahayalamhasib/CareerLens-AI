@@ -2,10 +2,8 @@ import { useState } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import WelcomeCard from './components/WelcomeCard';
-import StatCard from './components/StatCard';
-import ToolCard from './components/ToolCard';
-import RecentActivity from './components/RecentActivity';
+import Dashboard from './pages/Dashboard';
+import ResumeAnalysis from './pages/ResumeAnalysis';
 
 function App() {
   const [activeNav, setActiveNav] = useState('dashboard');
@@ -24,49 +22,9 @@ function App() {
         <Header setMobileOpen={setMobileOpen} />
         
         {activeNav === 'dashboard' ? (
-          <div className="dashboard-content">
-            <WelcomeCard />
-            
-            <section className="stats-grid">
-              <StatCard value="--" label="ATS Readiness" />
-              <StatCard value="--" label="Latest Match" />
-              <StatCard value="--" label="Skills to Improve" />
-              <StatCard value="--" label="Latest Session" />
-            </section>
-            
-            <section className="tools-section">
-              <h2>Career Tools</h2>
-              <div className="tools-grid">
-                <ToolCard 
-                  title="Resume Analysis" 
-                  description="Check your resume structure, quality, and ATS readiness." 
-                  buttonText="Analyze Resume" 
-                />
-                <ToolCard 
-                  title="Job Matcher" 
-                  description="Compare your resume with a job description and identify matching and missing skills." 
-                  buttonText="Match a Job" 
-                />
-                <ToolCard 
-                  title="Skill Gap Advisor" 
-                  description="Find the skills you need to improve for your target role." 
-                  buttonText="Explore Skills" 
-                />
-                <ToolCard 
-                  title="Interview Prep" 
-                  description="Practice interview questions and evaluate your answers." 
-                  buttonText="Start Practice" 
-                />
-                <ToolCard 
-                  title="Cover Letter" 
-                  description="Create a tailored cover letter based on your resume and target job." 
-                  buttonText="Create Letter" 
-                />
-              </div>
-            </section>
-            
-            <RecentActivity />
-          </div>
+          <Dashboard setActiveNav={setActiveNav} />
+        ) : activeNav === 'resume' ? (
+          <ResumeAnalysis />
         ) : (
           <div className="placeholder-content">
             <h2>{activeNav.charAt(0).toUpperCase() + activeNav.slice(1).replace('_', ' ')}</h2>
