@@ -1,22 +1,81 @@
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import WelcomeCard from './components/WelcomeCard';
+import StatCard from './components/StatCard';
+import ToolCard from './components/ToolCard';
+import RecentActivity from './components/RecentActivity';
 
 function App() {
-  return (
-    <div className="container">
-      <header className="header">
-        <h1 className="title">CareerLens AI</h1>
-        <p className="subtitle">AI-Powered Career & Job Application Assistant</p>
-      </header>
+  const [activeNav, setActiveNav] = useState('dashboard');
+  const [isMobileOpen, setMobileOpen] = useState(false);
 
-      <main className="main-content">
-        <div className="status-card">
-          <div className="status-icon">✅</div>
-          <h2 className="status-text">Frontend is running successfully.</h2>
-          <p className="status-subtext">Backend integration will be connected in the next phase.</p>
-        </div>
+  return (
+    <div className="app-layout">
+      <Sidebar 
+        activeNav={activeNav} 
+        setActiveNav={setActiveNav} 
+        isMobileOpen={isMobileOpen}
+        setMobileOpen={setMobileOpen}
+      />
+      
+      <main className="main-area">
+        <Header setMobileOpen={setMobileOpen} />
+        
+        {activeNav === 'dashboard' ? (
+          <div className="dashboard-content">
+            <WelcomeCard />
+            
+            <section className="stats-grid">
+              <StatCard value="--" label="ATS Readiness" />
+              <StatCard value="--" label="Latest Match" />
+              <StatCard value="--" label="Skills to Improve" />
+              <StatCard value="--" label="Latest Session" />
+            </section>
+            
+            <section className="tools-section">
+              <h2>Career Tools</h2>
+              <div className="tools-grid">
+                <ToolCard 
+                  title="Resume Analysis" 
+                  description="Check your resume structure, quality, and ATS readiness." 
+                  buttonText="Analyze Resume" 
+                />
+                <ToolCard 
+                  title="Job Matcher" 
+                  description="Compare your resume with a job description and identify matching and missing skills." 
+                  buttonText="Match a Job" 
+                />
+                <ToolCard 
+                  title="Skill Gap Advisor" 
+                  description="Find the skills you need to improve for your target role." 
+                  buttonText="Explore Skills" 
+                />
+                <ToolCard 
+                  title="Interview Prep" 
+                  description="Practice interview questions and evaluate your answers." 
+                  buttonText="Start Practice" 
+                />
+                <ToolCard 
+                  title="Cover Letter" 
+                  description="Create a tailored cover letter based on your resume and target job." 
+                  buttonText="Create Letter" 
+                />
+              </div>
+            </section>
+            
+            <RecentActivity />
+          </div>
+        ) : (
+          <div className="placeholder-content">
+            <h2>{activeNav.charAt(0).toUpperCase() + activeNav.slice(1).replace('_', ' ')}</h2>
+            <p>This module will be implemented in a future phase.</p>
+          </div>
+        )}
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
