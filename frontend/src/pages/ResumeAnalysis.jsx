@@ -1,16 +1,22 @@
 import { useState } from 'react';
-import { uploadResume } from '../api';
+import { uploadResume, analyzeResumeQuality } from '../api';
+import ResumeQualityCard from '../components/ResumeQualityCard';
 
-export default function ResumeAnalysis() {
+export default function ResumeAnalysis({ setGlobalAtsScore }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingStep, setLoadingStep] = useState('');
   const [error, setError] = useState(null);
+  const [qualityError, setQualityError] = useState(null);
+  
   const [result, setResult] = useState(null);
+  const [qualityResult, setQualityResult] = useState(null);
   const [showRawText, setShowRawText] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setError(null);
+    setQualityError(null);
     if (!selectedFile) return;
 
     if (!selectedFile.name.toLowerCase().match(/\.(pdf|docx)$/)) {
@@ -31,17 +37,42 @@ export default function ResumeAnalysis() {
   const handleUpload = async () => {
     if (!file) return;
     setLoading(true);
+    setLoadingStep('Extracting resume information...');
     setError(null);
+    setQualityError(null);
     setResult(null);
+    setQualityResult(null);
 
+    let parsedResumeData = null;
+
+    // Step 1: Upload and Parse
     try {
       const data = await uploadResume(file);
       setResult(data);
+      parsedResumeData = data.resume_data;
     } catch (err) {
       setError(err.message);
-    } finally {
       setLoading(false);
+      return; // Stop flow if upload fails
     }
+
+    // Step 2: Quality Analysis
+    if (parsedResumeData) {
+      setLoadingStep('Calculating ATS readiness...');
+      try {
+        const qualityData = await analyzeResumeQuality(parsedResumeData);
+        setQualityResult(qualityData.quality_analysis);
+        
+        // Update dashboard state if provided
+        if (setGlobalAtsScore && qualityData.quality_analysis) {
+          setGlobalAtsScore(qualityData.quality_analysis.overall_score);
+        }
+      } catch (err) {
+        setQualityError('Resume quality analysis could not be completed.');
+      }
+    }
+    
+    setLoading(false);
   };
 
   return (
@@ -79,7 +110,7 @@ export default function ResumeAnalysis() {
             onClick={handleUpload} 
             disabled={!file || loading}
           >
-            {loading ? 'Analyzing your resume...' : 'Analyze Resume'}
+            {loading ? loadingStep : 'Analyze Resume'}
           </button>
         </div>
       </section>
@@ -87,6 +118,23 @@ export default function ResumeAnalysis() {
       {result && result.resume_data && (
         <div className="analysis-results">
           
+          {/* Quality Analysis Results */}
+          {qualityResult && (
+            <ResumeQualityCard 
+              score={qualityResult.overall_score}
+              readiness={qualityResult.ats_readiness}
+              strengths={qualityResult.strengths}
+              improvements={qualityResult.improvements}
+              sectionStatus={qualityResult.section_status}
+            />
+          )}
+
+          {qualityError && (
+            <div className="card error-message" style={{marginBottom: '1.5rem', textAlign: 'center'}}>
+              {qualityError}
+            </div>
+          )}
+
           <section className="card overview-card">
             <h3>Resume Overview</h3>
             <div className="overview-grid">

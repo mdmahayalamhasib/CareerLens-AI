@@ -3,13 +3,13 @@ import StatCard from '../components/StatCard';
 import ToolCard from '../components/ToolCard';
 import RecentActivity from '../components/RecentActivity';
 
-export default function Dashboard({ setActiveNav }) {
+export default function Dashboard({ setActiveNav, atsScore }) {
   return (
     <div className="dashboard-content">
       <WelcomeCard onAnalyzeClick={() => setActiveNav('resume')} />
       
       <section className="stats-grid">
-        <StatCard value="--" label="ATS Readiness" />
+        <StatCard value={atsScore !== null ? atsScore : "--"} label="ATS Readiness" />
         <StatCard value="--" label="Latest Match" />
         <StatCard value="--" label="Skills to Improve" />
         <StatCard value="--" label="Latest Session" />

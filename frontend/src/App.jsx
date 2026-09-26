@@ -8,6 +8,7 @@ import ResumeAnalysis from './pages/ResumeAnalysis';
 function App() {
   const [activeNav, setActiveNav] = useState('dashboard');
   const [isMobileOpen, setMobileOpen] = useState(false);
+  const [globalAtsScore, setGlobalAtsScore] = useState(null);
 
   return (
     <div className="app-layout">
@@ -22,9 +23,9 @@ function App() {
         <Header setMobileOpen={setMobileOpen} />
         
         {activeNav === 'dashboard' ? (
-          <Dashboard setActiveNav={setActiveNav} />
+          <Dashboard setActiveNav={setActiveNav} atsScore={globalAtsScore} />
         ) : activeNav === 'resume' ? (
-          <ResumeAnalysis />
+          <ResumeAnalysis setGlobalAtsScore={setGlobalAtsScore} />
         ) : (
           <div className="placeholder-content">
             <h2>{activeNav.charAt(0).toUpperCase() + activeNav.slice(1).replace('_', ' ')}</h2>
