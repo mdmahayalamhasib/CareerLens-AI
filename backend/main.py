@@ -14,6 +14,8 @@ from job_analyzer import (
     match_resume_to_job,
 )
 
+from interview_generator import generate_interview_questions
+
 
 app = FastAPI(title="CareerLens AI")
 
@@ -30,6 +32,25 @@ class JobAnalyzeRequest(BaseModel):
     def job_description_must_not_be_empty(cls, value: str) -> str:
         if not value or not value.strip():
             raise ValueError("job_description must not be empty.")
+        return value
+
+    @field_validator("resume_data")
+    @classmethod
+    def resume_data_must_not_be_empty(cls, value: dict) -> dict:
+        if not isinstance(value, dict) or not value:
+            raise ValueError("resume_data must be a non-empty object.")
+        return value
+
+
+class InterviewQuestionsRequest(BaseModel):
+    job_data: dict
+    resume_data: dict
+
+    @field_validator("job_data")
+    @classmethod
+    def job_data_must_not_be_empty(cls, value: dict) -> dict:
+        if not isinstance(value, dict) or not value:
+            raise ValueError("job_data must be a non-empty object.")
         return value
 
     @field_validator("resume_data")
@@ -127,4 +148,18 @@ async def analyze_job(request: JobAnalyzeRequest):
     return {
         "job": job_data,
         "match": match_result,
+    }
+
+
+@app.post("/interview/questions")
+async def generate_questions(request: InterviewQuestionsRequest):
+    
+    # Generate interview questions
+    questions = generate_interview_questions(
+        request.job_data,
+        request.resume_data,
+    )
+    
+    return {
+        "questions": questions
     }
