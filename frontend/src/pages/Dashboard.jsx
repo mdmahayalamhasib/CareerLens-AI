@@ -3,14 +3,14 @@ import StatCard from '../components/StatCard';
 import ToolCard from '../components/ToolCard';
 import RecentActivity from '../components/RecentActivity';
 
-export default function Dashboard({ setActiveNav, atsScore }) {
+export default function Dashboard({ setActiveNav, atsScore, latestMatchScore }) {
   return (
     <div className="dashboard-content">
       <WelcomeCard onAnalyzeClick={() => setActiveNav('resume')} />
       
       <section className="stats-grid">
         <StatCard value={atsScore !== null ? atsScore : "--"} label="ATS Readiness" />
-        <StatCard value="--" label="Latest Match" />
+        <StatCard value={latestMatchScore !== null ? `${latestMatchScore}%` : "N/A"} label="Latest Match" />
         <StatCard value="--" label="Skills to Improve" />
         <StatCard value="--" label="Latest Session" />
       </section>
@@ -28,6 +28,7 @@ export default function Dashboard({ setActiveNav, atsScore }) {
             title="Job Matcher" 
             description="Compare your resume with a job description and identify matching and missing skills." 
             buttonText="Match a Job" 
+            onClick={() => setActiveNav('job')}
           />
           <ToolCard 
             title="Skill Gap Advisor" 

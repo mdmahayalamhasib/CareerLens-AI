@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { uploadResume, analyzeResumeQuality } from '../api';
 import ResumeQualityCard from '../components/ResumeQualityCard';
 
-export default function ResumeAnalysis({ setGlobalAtsScore }) {
+export default function ResumeAnalysis({ setGlobalAtsScore, setGlobalResumeData }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState('');
@@ -50,6 +50,7 @@ export default function ResumeAnalysis({ setGlobalAtsScore }) {
       const data = await uploadResume(file);
       setResult(data);
       parsedResumeData = data.resume_data;
+      if (setGlobalResumeData) setGlobalResumeData(parsedResumeData);
     } catch (err) {
       setError(err.message);
       setLoading(false);

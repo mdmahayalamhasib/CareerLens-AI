@@ -431,3 +431,7 @@ body {
 .strength-list li { color: var(--success-color); margin-bottom: 0.5rem; font-size: 0.95rem; }
 .improvement-list li { color: #f59e0b; margin-bottom: 0.5rem; font-size: 0.95rem; }
 .empty-list { color: var(--text-muted); font-size: 0.95rem; font-style: italic; margin-top: 1rem; }
+
+/* Job Matcher */
+.job-textarea { width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 1rem; font-family: inherit; font-size: 1rem; resize: vertical; line-height: 1.5; color: var(--text-main); }
+.job-textarea:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(37,99,235,0.2); }

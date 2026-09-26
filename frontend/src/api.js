@@ -57,3 +57,31 @@ export async function analyzeResumeQuality(resumeData) {
     throw error;
   }
 }
+
+export async function analyzeJob(jobDescription, resumeData) {
+  try {
+    const response = await fetch(`${BASE_URL}/job/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job_description: jobDescription, resume_data: resumeData }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during job analysis.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status} ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') {
+      throw new Error('Unable to connect to the CareerLens AI backend. Please make sure the FastAPI server is running.');
+    }
+    throw error;
+  }
+}
