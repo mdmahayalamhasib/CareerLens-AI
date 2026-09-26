@@ -19,6 +19,7 @@ from interview_evaluator import evaluate_interview_answer
 from interview_summary import generate_interview_summary
 from skill_gap_analyzer import analyze_skill_gaps
 from career_recommender import generate_skill_recommendations
+from cover_letter_generator import create_cover_letter
 
 
 app = FastAPI(title="CareerLens AI")
@@ -115,6 +116,25 @@ class CareerRecommendationsRequest(BaseModel):
     def skill_gaps_must_be_valid_list(cls, value: list[dict]) -> list[dict]:
         if not isinstance(value, list):
             raise ValueError("skill_gaps must be a list.")
+        return value
+
+
+class CoverLetterRequest(BaseModel):
+    resume_data: dict
+    job_data: dict
+
+    @field_validator("resume_data")
+    @classmethod
+    def resume_data_must_be_object(cls, value: dict) -> dict:
+        if not isinstance(value, dict):
+            raise ValueError("resume_data must be an object.")
+        return value
+
+    @field_validator("job_data")
+    @classmethod
+    def job_data_must_be_object(cls, value: dict) -> dict:
+        if not isinstance(value, dict):
+            raise ValueError("job_data must be an object.")
         return value
 
 
@@ -265,6 +285,17 @@ async def get_career_recommendations(request: CareerRecommendationsRequest):
     
     result = generate_skill_recommendations(
         request.skill_gaps
+    )
+    
+    return result
+
+
+@app.post("/cover-letter/generate")
+async def generate_cover_letter_endpoint(request: CoverLetterRequest):
+    
+    result = create_cover_letter(
+        request.resume_data,
+        request.job_data
     )
     
     return result
