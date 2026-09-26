@@ -20,6 +20,7 @@ from interview_summary import generate_interview_summary
 from skill_gap_analyzer import analyze_skill_gaps
 from career_recommender import generate_skill_recommendations
 from cover_letter_generator import create_cover_letter
+from resume_quality_analyzer import analyze_resume_quality
 
 
 app = FastAPI(title="CareerLens AI")
@@ -135,6 +136,17 @@ class CoverLetterRequest(BaseModel):
     def job_data_must_be_object(cls, value: dict) -> dict:
         if not isinstance(value, dict):
             raise ValueError("job_data must be an object.")
+        return value
+
+
+class ResumeQualityRequest(BaseModel):
+    resume_data: dict
+
+    @field_validator("resume_data")
+    @classmethod
+    def resume_data_must_be_object(cls, value: dict) -> dict:
+        if not isinstance(value, dict):
+            raise ValueError("resume_data must be an object.")
         return value
 
 
@@ -296,6 +308,16 @@ async def generate_cover_letter_endpoint(request: CoverLetterRequest):
     result = create_cover_letter(
         request.resume_data,
         request.job_data
+    )
+    
+    return result
+
+
+@app.post("/resume/quality")
+async def analyze_resume_quality_endpoint(request: ResumeQualityRequest):
+    
+    result = analyze_resume_quality(
+        request.resume_data
     )
     
     return result
