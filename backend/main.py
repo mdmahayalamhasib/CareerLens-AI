@@ -18,6 +18,7 @@ from interview_generator import generate_interview_questions
 from interview_evaluator import evaluate_interview_answer
 from interview_summary import generate_interview_summary
 from skill_gap_analyzer import analyze_skill_gaps
+from career_recommender import generate_skill_recommendations
 
 
 app = FastAPI(title="CareerLens AI")
@@ -103,6 +104,17 @@ class SkillGapAnalysisRequest(BaseModel):
     def job_data_must_be_object(cls, value: dict) -> dict:
         if not isinstance(value, dict):
             raise ValueError("job_data must be an object.")
+        return value
+
+
+class CareerRecommendationsRequest(BaseModel):
+    skill_gaps: list[dict]
+
+    @field_validator("skill_gaps")
+    @classmethod
+    def skill_gaps_must_be_valid_list(cls, value: list[dict]) -> list[dict]:
+        if not isinstance(value, list):
+            raise ValueError("skill_gaps must be a list.")
         return value
 
 
@@ -246,3 +258,13 @@ async def analyze_skill_gaps_endpoint(request: SkillGapAnalysisRequest):
     )
     
     return analysis
+
+
+@app.post("/career/recommendations")
+async def get_career_recommendations(request: CareerRecommendationsRequest):
+    
+    result = generate_skill_recommendations(
+        request.skill_gaps
+    )
+    
+    return result
