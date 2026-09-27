@@ -1,0 +1,37 @@
+{
+  "seed": 42,
+  "total": 200,
+  "train_count": 140,
+  "validation_count": 30,
+  "test_count": 30,
+  "train_distribution": {
+    "total": 140,
+    "label_1": 77,
+    "label_0": 63,
+    "direct_relevance": 42,
+    "transferable_relevance": 35,
+    "lexical_trap": 28,
+    "irrelevant": 35
+  },
+  "validation_distribution": {
+    "total": 30,
+    "label_1": 17,
+    "label_0": 13,
+    "direct_relevance": 9,
+    "transferable_relevance": 8,
+    "lexical_trap": 6,
+    "irrelevant": 7
+  },
+  "test_distribution": {
+    "total": 30,
+    "label_1": 16,
+    "label_0": 14,
+    "direct_relevance": 9,
+    "transferable_relevance": 7,
+    "lexical_trap": 6,
+    "irrelevant": 8
+  },
+  "exact_duplicate_leakage": 0,
+  "near_duplicate_warnings": [],
+  "semantic_leakage_warnings": []
+}

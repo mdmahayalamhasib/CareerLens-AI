@@ -1,0 +1,100 @@
+{"id": 1, "resume_context": "Built state management using Redux.", "job_requirement": "Zustand", "human_label": 1, "reasoning": "Both are React state management libraries; highly transferable."}
+{"id": 2, "resume_context": "Developed RESTful backends using Django.", "job_requirement": "Flask", "human_label": 1, "reasoning": "Both are Python web frameworks; concepts translate easily."}
+{"id": 3, "resume_context": "Created dynamic user interfaces with React.", "job_requirement": "Vue", "human_label": 1, "reasoning": "Both are component-based frontend JavaScript frameworks."}
+{"id": 4, "resume_context": "Provisioned servers on AWS EC2 and managed S3 buckets.", "job_requirement": "GCP Compute Engine", "human_label": 1, "reasoning": "Core cloud infrastructure concepts transfer between major providers."}
+{"id": 5, "resume_context": "Designed relational schemas in PostgreSQL.", "job_requirement": "MySQL", "human_label": 1, "reasoning": "Both are popular RDBMS; SQL knowledge is highly transferable."}
+{"id": 6, "resume_context": "Trained neural networks with PyTorch.", "job_requirement": "TensorFlow", "human_label": 1, "reasoning": "Both are primary deep learning frameworks with similar underlying concepts."}
+{"id": 7, "resume_context": "Built enterprise microservices with Java Spring Boot.", "job_requirement": "C# .NET Core", "human_label": 1, "reasoning": "Both are statically-typed, object-oriented enterprise web frameworks."}
+{"id": 8, "resume_context": "Automated CI/CD pipelines using Jenkins.", "job_requirement": "GitHub Actions", "human_label": 1, "reasoning": "Both handle continuous integration and deployment orchestration."}
+{"id": 9, "resume_context": "Orchestrated containers using Docker Swarm.", "job_requirement": "Kubernetes", "human_label": 1, "reasoning": "Both handle container orchestration, though Kubernetes is more complex."}
+{"id": 10, "resume_context": "Stored document data in MongoDB.", "job_requirement": "CouchDB", "human_label": 1, "reasoning": "Both are NoSQL document stores with JSON-like formats."}
+{"id": 11, "resume_context": "Built backend APIs with Express.js.", "job_requirement": "Koa.js", "human_label": 1, "reasoning": "Both are Node.js web frameworks created by the same team."}
+{"id": 12, "resume_context": "Wrote unit tests using Jasmine and Karma.", "job_requirement": "Jest", "human_label": 1, "reasoning": "All are JavaScript testing frameworks with similar assertion syntax."}
+{"id": 13, "resume_context": "Developed enterprise applications using Angular.", "job_requirement": "React", "human_label": 1, "reasoning": "Both solve complex frontend SPA challenges."}
+{"id": 14, "resume_context": "Implemented caching layer using Redis.", "job_requirement": "Memcached", "human_label": 1, "reasoning": "Both are high-performance distributed memory caching systems."}
+{"id": 15, "resume_context": "Styled applications with Tailwind CSS.", "job_requirement": "Bootstrap", "human_label": 1, "reasoning": "Both are popular CSS frameworks, though with different paradigms."}
+{"id": 16, "resume_context": "Analyzed large datasets using Pandas and Scikit-learn.", "job_requirement": "Data Science", "human_label": 1, "reasoning": "Pandas and Scikit-learn are core tools of Data Science."}
+{"id": 17, "resume_context": "Built robust applications using TypeScript.", "job_requirement": "JavaScript", "human_label": 1, "reasoning": "TypeScript is a superset of JavaScript; knowledge implies JS proficiency."}
+{"id": 18, "resume_context": "Developed concurrent services in Golang.", "job_requirement": "Rust", "human_label": 1, "reasoning": "Both are modern, compiled systems languages focused on performance and concurrency."}
+{"id": 19, "resume_context": "Created web applications with Ruby on Rails.", "job_requirement": "Django", "human_label": 1, "reasoning": "Both are opinionated, MVC-style backend web frameworks."}
+{"id": 20, "resume_context": "Configured reverse proxies using Nginx.", "job_requirement": "Apache", "human_label": 1, "reasoning": "Both are widely used web servers and reverse proxies."}
+{"id": 21, "resume_context": "Designed robust REST APIs.", "job_requirement": "GraphQL", "human_label": 1, "reasoning": "Both are paradigms for client-server API communication."}
+{"id": 22, "resume_context": "Managed databases using Microsoft SQL Server.", "job_requirement": "Oracle Database", "human_label": 1, "reasoning": "Both are enterprise-grade relational database systems."}
+{"id": 23, "resume_context": "Handled message queuing with RabbitMQ.", "job_requirement": "Kafka", "human_label": 1, "reasoning": "Both handle asynchronous messaging and event streaming."}
+{"id": 24, "resume_context": "Monitored system metrics using Prometheus.", "job_requirement": "Datadog", "human_label": 1, "reasoning": "Both are system monitoring and alerting solutions."}
+{"id": 25, "resume_context": "Managed agile sprints in Jira.", "job_requirement": "Trello", "human_label": 1, "reasoning": "Both are issue tracking and project management tools."}
+{"id": 26, "resume_context": "Automated browser testing with Selenium.", "job_requirement": "Cypress", "human_label": 1, "reasoning": "Both are end-to-end web testing frameworks."}
+{"id": 27, "resume_context": "Administered Linux servers.", "job_requirement": "Ubuntu", "human_label": 1, "reasoning": "Ubuntu is a popular Linux distribution; administration skills directly apply."}
+{"id": 28, "resume_context": "Designed wireframes and mockups in Figma.", "job_requirement": "Adobe XD", "human_label": 1, "reasoning": "Both are vector-based UI/UX design tools."}
+{"id": 29, "resume_context": "Managed Git repositories via Bitbucket.", "job_requirement": "GitLab", "human_label": 1, "reasoning": "Both are Git repository management and CI/CD platforms."}
+{"id": 30, "resume_context": "Managed Java builds with Maven.", "job_requirement": "Gradle", "human_label": 1, "reasoning": "Both are build automation tools for the JVM ecosystem."}
+{"id": 31, "resume_context": "Developed models for Machine Learning.", "job_requirement": "ML", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 32, "resume_context": "Researched Artificial Intelligence solutions.", "job_requirement": "AI", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 33, "resume_context": "Implemented Natural Language Processing algorithms.", "job_requirement": "NLP", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 34, "resume_context": "Set up Continuous Integration pipelines.", "job_requirement": "CI/CD", "human_label": 1, "reasoning": "CI is the first half of CI/CD; highly relevant."}
+{"id": 35, "resume_context": "Specialized in Frontend development.", "job_requirement": "UI/UX implementation", "human_label": 1, "reasoning": "These terms are often used interchangeably for building interfaces."}
+{"id": 36, "resume_context": "Focused on Backend engineering.", "job_requirement": "Server-side logic", "human_label": 1, "reasoning": "Synonymous descriptions of the same domain."}
+{"id": 37, "resume_context": "Worked as a Database administrator.", "job_requirement": "DBA", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 38, "resume_context": "Deployed applications to Amazon Web Services.", "job_requirement": "AWS", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 39, "resume_context": "Utilized Google Cloud Platform for hosting.", "job_requirement": "GCP", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 40, "resume_context": "Managed infrastructure on Microsoft Azure.", "job_requirement": "Azure", "human_label": 1, "reasoning": "Common shorthand."}
+{"id": 41, "resume_context": "Deployed pods on K8s clusters.", "job_requirement": "Kubernetes", "human_label": 1, "reasoning": "K8s is the standard numeronym for Kubernetes."}
+{"id": 42, "resume_context": "Used Version control for team collaboration.", "job_requirement": "Git", "human_label": 1, "reasoning": "Git is the de facto standard version control system."}
+{"id": 43, "resume_context": "Designed Relational databases.", "job_requirement": "RDBMS", "human_label": 1, "reasoning": "RDBMS stands for Relational Database Management System."}
+{"id": 44, "resume_context": "Modeled data using NoSQL solutions.", "job_requirement": "Document databases", "human_label": 1, "reasoning": "Document databases are a primary category of NoSQL."}
+{"id": 45, "resume_context": "Performed rigorous Data analysis.", "job_requirement": "Data analytics", "human_label": 1, "reasoning": "Highly synonymous fields."}
+{"id": 46, "resume_context": "Built Predictive modeling systems.", "job_requirement": "Machine Learning", "human_label": 1, "reasoning": "Predictive modeling is a core application of machine learning."}
+{"id": 47, "resume_context": "Practiced TDD strictly.", "job_requirement": "Test-Driven Development", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 48, "resume_context": "Applied OOD principles.", "job_requirement": "Object-Oriented Design", "human_label": 1, "reasoning": "Direct abbreviation."}
+{"id": 49, "resume_context": "Architected solutions using Microservices.", "job_requirement": "Distributed systems", "human_label": 1, "reasoning": "Microservices are a specific architectural style of distributed systems."}
+{"id": 50, "resume_context": "Built RESTful web services.", "job_requirement": "REST API", "human_label": 1, "reasoning": "Synonymous architectural concepts."}
+{"id": 51, "resume_context": "Trained Deep Learning models.", "job_requirement": "Neural Networks", "human_label": 1, "reasoning": "Deep learning is fundamentally based on deep neural networks."}
+{"id": 52, "resume_context": "Processed Big Data pipelines.", "job_requirement": "Hadoop/Spark", "human_label": 1, "reasoning": "Hadoop and Spark are the primary tools for Big Data processing."}
+{"id": 53, "resume_context": "Led projects using Agile methodology.", "job_requirement": "Scrum", "human_label": 1, "reasoning": "Scrum is the most common Agile framework."}
+{"id": 54, "resume_context": "Audited Web application security.", "job_requirement": "OWASP", "human_label": 1, "reasoning": "OWASP is the leading standard for web application security."}
+{"id": 55, "resume_context": "Created layouts with Responsive design.", "job_requirement": "Mobile-first CSS", "human_label": 1, "reasoning": "Both refer to modern, adaptable web styling practices."}
+{"id": 56, "resume_context": "Built static sites with HTML and CSS.", "job_requirement": "Kubernetes", "human_label": 0, "reasoning": "Basic frontend markup does not translate to complex container orchestration."}
+{"id": 57, "resume_context": "Wrote interactive scripts in JavaScript.", "job_requirement": "Java", "human_label": 0, "reasoning": "Despite the name, these languages share very little in syntax or ecosystem."}
+{"id": 58, "resume_context": "Developed high-performance algorithms in C++.", "job_requirement": "C#", "human_label": 0, "reasoning": "Different languages with different ecosystems and memory management paradigms."}
+{"id": 59, "resume_context": "Built cross-platform apps in React Native.", "job_requirement": "Swift", "human_label": 0, "reasoning": "React Native (JS) does not automatically confer native Swift (iOS) proficiency."}
+{"id": 60, "resume_context": "Wrote complex SQL queries.", "job_requirement": "NoSQL", "human_label": 0, "reasoning": "Relational querying does not directly translate to document/key-value store design."}
+{"id": 61, "resume_context": "Wrote Python scripts to automate daily tasks.", "job_requirement": "Django", "human_label": 0, "reasoning": "Basic scripting does not imply knowledge of complex web frameworks."}
+{"id": 62, "resume_context": "Explored data in Jupyter Notebooks.", "job_requirement": "Production ML deployment", "human_label": 0, "reasoning": "Notebook exploration is vastly different from robust, scalable ML engineering."}
+{"id": 63, "resume_context": "Retouched photos using Photoshop.", "job_requirement": "Frontend development", "human_label": 0, "reasoning": "Image editing is not programming."}
+{"id": 64, "resume_context": "Maintained WordPress blogs for clients.", "job_requirement": "Next.js", "human_label": 0, "reasoning": "CMS management does not translate to modern React frameworks."}
+{"id": 65, "resume_context": "Used Excel to track bug reports.", "job_requirement": "Pandas", "human_label": 0, "reasoning": "Spreadsheet usage does not equal programmatic data manipulation."}
+{"id": 66, "resume_context": "Performed Manual testing of UI flows.", "job_requirement": "Cypress", "human_label": 0, "reasoning": "Manual QA does not confer automated test engineering skills."}
+{"id": 67, "resume_context": "Worked in Product Management.", "job_requirement": "Software Engineering", "human_label": 0, "reasoning": "Defining what to build is distinct from actually programming it."}
+{"id": 68, "resume_context": "Performed Data Entry tasks.", "job_requirement": "Data Science", "human_label": 0, "reasoning": "Typing data is unrelated to statistical modeling and algorithms."}
+{"id": 69, "resume_context": "Wrote Bash scripts for server maintenance.", "job_requirement": "C++ algorithms", "human_label": 0, "reasoning": "Shell scripting is unrelated to complex system-level algorithmic programming."}
+{"id": 70, "resume_context": "Configured Network routing protocols.", "job_requirement": "React", "human_label": 0, "reasoning": "Hardware networking is entirely separate from UI component development."}
+{"id": 71, "resume_context": "Built games in Unity 3D.", "job_requirement": "Angular", "human_label": 0, "reasoning": "Game development paradigms do not map to enterprise web frameworks."}
+{"id": 72, "resume_context": "Programmed Arduino microcontrollers.", "job_requirement": "Cloud Architecture", "human_label": 0, "reasoning": "Embedded systems programming is far removed from distributed cloud design."}
+{"id": 73, "resume_context": "Provided IT Technical Support.", "job_requirement": "DevOps", "human_label": 0, "reasoning": "Helpdesk support does not equate to infrastructure-as-code and CI/CD pipelines."}
+{"id": 74, "resume_context": "Served as a Scrum Master.", "job_requirement": "System Design", "human_label": 0, "reasoning": "Process facilitation does not provide architectural engineering skills."}
+{"id": 75, "resume_context": "Created marketing Graphic Design.", "job_requirement": "Database tuning", "human_label": 0, "reasoning": "Visual design is entirely distinct from database query optimization."}
+{"id": 76, "resume_context": "Worked as a freelance Photographer.", "job_requirement": "AWS", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 77, "resume_context": "Gave Public Speaking presentations.", "job_requirement": "MongoDB", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 78, "resume_context": "Provided excellent Customer Service.", "job_requirement": "Machine Learning", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 79, "resume_context": "Worked as a line cook in a restaurant.", "job_requirement": "Docker", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 80, "resume_context": "Managed corporate Accounting.", "job_requirement": "Node.js", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 81, "resume_context": "Led regional Sales initiatives.", "job_requirement": "Kubernetes", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 82, "resume_context": "Worked as a delivery Driver.", "job_requirement": "Git", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 83, "resume_context": "Produced electronic Music.", "job_requirement": "SQL", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 84, "resume_context": "Wrote advertising Copywriting.", "job_requirement": "TensorFlow", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 85, "resume_context": "Managed corporate Event Planning.", "job_requirement": "REST API", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 86, "resume_context": "Translated documents from Spanish to English.", "job_requirement": "Vue", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 87, "resume_context": "Provided Legal advising services.", "job_requirement": "Redis", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 88, "resume_context": "Studied Mechanical Engineering.", "job_requirement": "CSS", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 89, "resume_context": "Worked in Retail Management.", "job_requirement": "PostgreSQL", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 90, "resume_context": "Provided patient care in Nursing.", "job_requirement": "JavaScript", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 91, "resume_context": "Built furniture in Carpentry.", "job_requirement": "PHP", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 92, "resume_context": "Performed freelance Video Editing.", "job_requirement": "GraphQL", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 93, "resume_context": "Managed HR recruitment.", "job_requirement": "WebSockets", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 94, "resume_context": "Worked as a Fitness coach.", "job_requirement": "PyTorch", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 95, "resume_context": "Sold Real estate properties.", "job_requirement": "Express", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 96, "resume_context": "Managed Warehouse operations.", "job_requirement": "Tailwind CSS", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 97, "resume_context": "Operated a Call center.", "job_requirement": "Scikit-learn", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 98, "resume_context": "Worked in Bartending.", "job_requirement": "Azure", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 99, "resume_context": "Maintained Landscaping projects.", "job_requirement": "GCP", "human_label": 0, "reasoning": "Unrelated field."}
+{"id": 100, "resume_context": "Coordinated Logistics shipments.", "job_requirement": "TypeScript", "human_label": 0, "reasoning": "Unrelated field."}

@@ -1,0 +1,29 @@
+{
+  "original_count": 100,
+  "new_examples_added": 100,
+  "final_count": 200,
+  "original_distribution": {
+    "direct_relevance": 30,
+    "transferable_relevance": 25,
+    "lexical_trap": 20,
+    "irrelevant": 25
+  },
+  "final_distribution": {
+    "direct_relevance": 60,
+    "transferable_relevance": 50,
+    "lexical_trap": 40,
+    "irrelevant": 50
+  },
+  "questionable_original_examples": [
+    "rel_061",
+    "rel_062",
+    "rel_070"
+  ],
+  "duplicate_count": 0,
+  "near_duplicate_count": 0,
+  "notes": [
+    "Dataset expanded successfully.",
+    "Original 100 examples were not modified.",
+    "New examples focused on realistic technical overlaps."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "model": "fine-tuned all-mpnet-base-v2",
+  "threshold": 0.5,
+  "model_size_mb": 418.37,
+  "load_time_seconds": 7.7672,
+  "single_inference_seconds": 0.0969,
+  "average_inference_seconds": 0.0982,
+  "min_inference_seconds": 0.0884,
+  "max_inference_seconds": 0.1164,
+  "test_examples_used_for_benchmark": 20
+}

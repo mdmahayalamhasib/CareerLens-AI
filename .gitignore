@@ -5,3 +5,9 @@ __pycache__/
 # Frontend
 node_modules/
 dist/
+
+# Machine Learning Models
+*.safetensors
+*.bin
+*.pt
+backend/ml/models/

@@ -1,0 +1,95 @@
+{
+  "test_count": 30,
+  "pretrained": {
+    "threshold": 0.25,
+    "accuracy": 0.8666666666666667,
+    "precision": 0.8,
+    "recall": 1.0,
+    "f1": 0.888888888888889,
+    "tp": 16,
+    "tn": 10,
+    "fp": 4,
+    "fn": 0
+  },
+  "finetuned": {
+    "threshold": 0.5,
+    "accuracy": 0.9,
+    "precision": 0.8421052631578947,
+    "recall": 1.0,
+    "f1": 0.9142857142857143,
+    "tp": 16,
+    "tn": 11,
+    "fp": 3,
+    "fn": 0,
+    "category_analysis": {
+      "transferable_relevance": {
+        "total": 7,
+        "correct": 7,
+        "incorrect": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "lexical_trap": {
+        "total": 6,
+        "correct": 3,
+        "incorrect": 3,
+        "fp": 3,
+        "fn": 0
+      },
+      "direct_relevance": {
+        "total": 9,
+        "correct": 9,
+        "incorrect": 0,
+        "fp": 0,
+        "fn": 0
+      },
+      "irrelevant": {
+        "total": 8,
+        "correct": 8,
+        "incorrect": 0,
+        "fp": 0,
+        "fn": 0
+      }
+    },
+    "errors": [
+      {
+        "id": "rel_157",
+        "category": "lexical_trap",
+        "label": 0,
+        "prediction": 1,
+        "model_score": 0.8728668093681335,
+        "job_requirement": "Deploy applications using Kubernetes.",
+        "resume_context": "Containerized applications with Docker and deployed them to a single Linux server.",
+        "original_reason": "Docker is related to containerization, but the context does not demonstrate Kubernetes orchestration."
+      },
+      {
+        "id": "rel_058",
+        "category": "lexical_trap",
+        "label": 0,
+        "prediction": 1,
+        "model_score": 0.8697000741958618,
+        "job_requirement": "Develop React applications.",
+        "resume_context": "Built an Angular web application with TypeScript.",
+        "original_reason": "Both are frontend frameworks, but the resume does not demonstrate React."
+      },
+      {
+        "id": "rel_158",
+        "category": "lexical_trap",
+        "label": 0,
+        "prediction": 1,
+        "model_score": 0.8851349949836731,
+        "job_requirement": "Develop React applications.",
+        "resume_context": "Built Angular applications using TypeScript.",
+        "original_reason": "Both are frontend technologies, but the resume does not demonstrate React."
+      }
+    ]
+  },
+  "improvement": {
+    "accuracy_change": 0.033333333333333326,
+    "precision_change": 0.042105263157894646,
+    "recall_change": 0.0,
+    "f1_change": 0.025396825396825307,
+    "fp_change": -1,
+    "fn_change": 0
+  }
+}
