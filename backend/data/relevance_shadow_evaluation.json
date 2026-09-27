@@ -1,0 +1,136 @@
+{
+  "test_metrics": {
+    "accuracy": 0.9,
+    "precision": 0.8421052631578947,
+    "recall": 1.0,
+    "f1": 0.9142857142857143,
+    "tp": 16,
+    "tn": 11,
+    "fp": 3,
+    "fn": 0
+  },
+  "category_metrics": {
+    "direct_relevance": {
+      "total": 9,
+      "correct": 9,
+      "errors": []
+    },
+    "transferable_relevance": {
+      "total": 7,
+      "correct": 7,
+      "errors": []
+    },
+    "lexical_trap": {
+      "total": 6,
+      "correct": 3,
+      "errors": [
+        {
+          "id": "rel_157",
+          "label": 0,
+          "prediction": 1,
+          "score": 0.8728668093681335,
+          "job": "Deploy applications using Kubernetes.",
+          "resume": "Containerized applications with Docker and deployed them to a single Linux server."
+        },
+        {
+          "id": "rel_058",
+          "label": 0,
+          "prediction": 1,
+          "score": 0.8697000741958618,
+          "job": "Develop React applications.",
+          "resume": "Built an Angular web application with TypeScript."
+        },
+        {
+          "id": "rel_158",
+          "label": 0,
+          "prediction": 1,
+          "score": 0.8851349949836731,
+          "job": "Develop React applications.",
+          "resume": "Built Angular applications using TypeScript."
+        }
+      ]
+    },
+    "irrelevant": {
+      "total": 8,
+      "correct": 8,
+      "errors": []
+    }
+  },
+  "simulation_results": [
+    {
+      "id": "sim_1",
+      "scenario": "direct_relevance",
+      "job_requirement": "REST API development",
+      "resume_context": "Built a FastAPI backend with HTTP endpoints and REST APIs.",
+      "rule_based_interpretation": {
+        "explicit_skill_match": true,
+        "matched_keyword": "rest"
+      },
+      "ml_interpretation": {
+        "relevance_score": 0.6680306196212769,
+        "is_relevant": true,
+        "threshold": 0.5
+      }
+    },
+    {
+      "id": "sim_2",
+      "scenario": "lexical_trap",
+      "job_requirement": "Kubernetes",
+      "resume_context": "Containerized applications using Docker.",
+      "rule_based_interpretation": {
+        "explicit_skill_match": false,
+        "matched_keyword": "MISSING"
+      },
+      "ml_interpretation": {
+        "relevance_score": 0.6242192983627319,
+        "is_relevant": true,
+        "threshold": 0.5
+      }
+    },
+    {
+      "id": "sim_3",
+      "scenario": "transferable_relevance",
+      "job_requirement": "React",
+      "resume_context": "Built responsive interfaces using JavaScript and modern frontend frameworks.",
+      "rule_based_interpretation": {
+        "explicit_skill_match": false,
+        "matched_keyword": "MISSING"
+      },
+      "ml_interpretation": {
+        "relevance_score": 0.4726732075214386,
+        "is_relevant": false,
+        "threshold": 0.5
+      }
+    },
+    {
+      "id": "sim_4",
+      "scenario": "transferable_relevance",
+      "job_requirement": "PostgreSQL",
+      "resume_context": "Designed relational databases and wrote complex SQL queries using MySQL.",
+      "rule_based_interpretation": {
+        "explicit_skill_match": false,
+        "matched_keyword": "MISSING"
+      },
+      "ml_interpretation": {
+        "relevance_score": 0.7064865231513977,
+        "is_relevant": true,
+        "threshold": 0.5
+      }
+    },
+    {
+      "id": "sim_5",
+      "scenario": "transferable_relevance",
+      "job_requirement": "Machine Learning",
+      "resume_context": "Trained classification models using Python, scikit-learn and TF-IDF.",
+      "rule_based_interpretation": {
+        "explicit_skill_match": false,
+        "matched_keyword": "MISSING"
+      },
+      "ml_interpretation": {
+        "relevance_score": 0.7414954900741577,
+        "is_relevant": true,
+        "threshold": 0.5
+      }
+    }
+  ]
+}
