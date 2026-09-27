@@ -61,7 +61,7 @@ export default function InterviewQuestionCard({ question, currentIdx, total, onE
           
           <p style={{ marginBottom: '1.5rem', lineHeight: '1.5' }}><strong>Feedback:</strong> {evaluation.feedback}</p>
           
-          <div className="resume-quality-card" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          <div className="recommendations-grid">
             <div className="card" style={{ padding: '1rem' }}>
               <h4 style={{ fontSize: '0.95rem' }}>Strengths</h4>
               {evaluation.strengths && evaluation.strengths.length > 0 ? (

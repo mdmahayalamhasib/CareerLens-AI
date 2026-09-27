@@ -27,7 +27,7 @@ export default function InterviewSummary({ summary }) {
         <p>{summary.recommendation}</p>
       </div>
 
-      <div className="resume-quality-card" style={{ gridTemplateColumns: '1fr 1fr' }}>
+      <div className="recommendations-grid">
         <div className="card">
           <h3>Top Strengths</h3>
           <div className="list-container">

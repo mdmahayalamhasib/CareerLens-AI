@@ -28,7 +28,13 @@ def generate_interview_questions(job_data: dict, resume_data: dict) -> list[dict
     pref_skills = job_data.get("preferred_skills", []) or []
     projects = resume_data.get("projects", []) or []
 
-    # 1. Generate technical questions for required skills
+    # 1. Generate primary behavioral question
+    add_question(
+        "Describe a technical challenge you faced in one of your projects and how you solved it.",
+        "behavioral"
+    )
+
+    # 2. Generate technical questions for required skills
     for skill in req_skills:
         skill_lower = skill.lower()
         if skill_lower == "python":
@@ -66,11 +72,7 @@ def generate_interview_questions(job_data: dict, resume_data: dict) -> list[dict
         q_text = f"Explain your {proj_name} project{tech_str}."
         add_question(q_text, "project")
 
-    # 4. Generate behavioral questions
-    add_question(
-        "Describe a technical challenge you faced in one of your projects and how you solved it.",
-        "behavioral"
-    )
+    # 4. (Moved primary behavioral question to top)
 
     # Pad to at least 5 questions if we don't have enough
     fallback_behavioral = [

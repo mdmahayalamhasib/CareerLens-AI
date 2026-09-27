@@ -263,6 +263,19 @@ export default function ResumeAnalysis({ setGlobalAtsScore, setGlobalResumeData 
           </section>
 
           <section className="card">
+            <h3>Publications & Datasets</h3>
+            <div className="list-container">
+              {(result.resume_data.publications || []).length > 0 ? (
+                result.resume_data.publications.map((item, index) => (
+                  <div key={index} className="list-item">{item}</div>
+                ))
+              ) : (
+                <p>No publications or datasets detected.</p>
+              )}
+            </div>
+          </section>
+
+          <section className="card">
             <div className="flex-between">
               <h3>Extracted Text</h3>
               <span>Extracted characters: {result.character_count || 0}</span>

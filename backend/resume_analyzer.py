@@ -11,6 +11,7 @@ import re
 # Section headings we recognize, mapped to the key we'll use in the output dict.
 # Lowercased for matching. Add more variants here as you encounter them.
 SECTION_HEADINGS = {
+    "summary": ["summary", "professional summary", "about me", "profile"],
     "skills": ["skills", "technical skills", "core skills", "key skills"],
     "education": ["education", "academic background", "educational background"],
     "experience": [
@@ -20,14 +21,19 @@ SECTION_HEADINGS = {
         "employment history",
     ],
     "projects": ["projects", "academic projects", "personal projects"],
+    "publications": ["publications", "publications and datasets", "publications & datasets"],
     "certifications": ["certifications", "certificates", "licenses & certifications"],
     "leadership": [
         "leadership and volunteering",
         "leadership & volunteering",
         "leadership",
         "volunteering",
+        "achievements and volunteering",
+        "achievements & volunteering",
+        "achievements"
     ],
 }
+# 
 
 EMAIL_PATTERN = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
 
@@ -189,33 +195,82 @@ def _split_skills_list(skills_block: str) -> list[str]:
     return all_skills
 
 
+def _is_metadata_line(line: str) -> bool:
+    if not line or BULLET_PREFIX_PATTERN.match(line):
+        return False
+    lower = line.lower()
+    
+    if "github" in lower or "demo" in lower:
+        return True
+    if re.search(r"\b(20\d{2}|19\d{2}|present)\b", lower):
+        return True
+        
+    # A line with a pipe is only metadata if it clearly looks like a list of links/tags
+    # (multiple pipes), rather than a "Project | Tagline" title (single pipe).
+    if line.count("|") >= 2:
+        return True
+        
+    return False
+
+
 def _is_new_title_start(lines: list[str], idx: int) -> bool:
-    """
-    Structural signal for "a new project begins at lines[idx]": true only if
-    this line is not a bullet, AND the next non-empty line is a standalone
-    year (matching the title -> year -> tech -> description pattern).
-    This deliberately ignores commas/pipes in the line itself, so a
-    technology/metadata line is never mistaken for a title.
-    """
     line = lines[idx].strip()
     if not line or BULLET_PREFIX_PATTERN.match(line):
         return False
+
+    # Is it the very first non-empty line?
+    prev_idx = idx - 1
+    while prev_idx >= 0 and lines[prev_idx].strip() == "":
+        prev_idx -= 1
+    if prev_idx < 0:
+        return True
 
     j = idx + 1
     while j < len(lines) and lines[j].strip() == "":
         j += 1
 
-    return j < len(lines) and bool(STANDALONE_YEAR_PATTERN.fullmatch(lines[j].strip()))
+    if j < len(lines):
+        next_line = lines[j].strip()
+        if _is_metadata_line(next_line):
+            # Title contextual detection:
+            # Must not be a long sentence/description.
+            if len(line) < 120 and not line.endswith("."):
+                # Must not be pure isolated metadata itself (like a standalone year or github link)
+                # But a title containing multiple | characters is fine.
+                lower = line.lower()
+                is_pure_meta = ("github" in lower or "demo" in lower) or (len(line) < 30 and bool(re.search(r"\b(20\d{2}|19\d{2})\b", lower)) and "|" not in line)
+                if not is_pure_meta:
+                    return True
 
+    return False
+
+
+def _parse_simple_list(block: str) -> list[str]:
+    if not block:
+        return []
+    items = []
+    current_item = []
+    for line in block.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if BULLET_PREFIX_PATTERN.match(line):
+            if current_item:
+                items.append("\n".join(current_item))
+            current_item = [BULLET_PREFIX_PATTERN.sub("", line).strip()]
+        else:
+            current_item.append(line)
+    if current_item:
+        items.append("\n".join(current_item))
+        
+    # If no bullets were found, split by newline if lines are reasonably short
+    if len(items) == 1 and "\n" in items[0]:
+        lines = items[0].split("\n")
+        if all(len(l) < 150 for l in lines):
+            return lines
+    return items
 
 def _parse_projects(projects_block: str) -> list[dict]:
-    """
-    Convert the raw 'projects' section text into a list of individual
-    project dicts, following the structural pattern:
-        title -> (optional) standalone year -> (optional) tech/metadata line -> bullets -> next title
-    A new project is only recognized via that structure (title immediately
-    followed by a standalone year), never by line content like commas or '|'.
-    """
     if not projects_block:
         return []
 
@@ -228,6 +283,10 @@ def _parse_projects(projects_block: str) -> list[dict]:
         i += 1
 
     while i < n:
+        if not _is_new_title_start(lines, i):
+            i += 1
+            continue
+            
         title_line = lines[i].strip()
         i += 1
 
@@ -238,25 +297,35 @@ def _parse_projects(projects_block: str) -> list[dict]:
         while i < n and lines[i].strip() == "":
             i += 1
 
-        # Requirement 2: a standalone year right after the title is the project's year.
-        if i < n and STANDALONE_YEAR_PATTERN.fullmatch(lines[i].strip()):
-            year = lines[i].strip()
+        metadata_lines_consumed = 0
+        while i < n and not BULLET_PREFIX_PATTERN.match(lines[i].strip()) and metadata_lines_consumed < 2:
+            if lines[i].strip() == "":
+                i += 1
+                continue
+            if _is_new_title_start(lines, i):
+                break
+                
+            meta_line = lines[i].strip()
+            
+            if not year:
+                year_match = re.search(r"\b((?:[A-Za-z]+\s*\d{4}|\d{4})\s*[-–]\s*(?:[A-Za-z]+\s*\d{4}|\d{4}|Present)|\d{4})\b", meta_line, re.IGNORECASE)
+                if year_match:
+                    year = year_match.group(1)
+            
+            # Extract technologies from comma/pipe separated lines
+            if "," in meta_line and "|" not in meta_line and "github" not in meta_line.lower():
+                technologies.extend([t.strip() for t in meta_line.split(",") if t.strip()])
+            elif "|" in meta_line:
+                tech_part = meta_line.split("|")[0]
+                if "," in tech_part:
+                    technologies.extend([t.strip() for t in tech_part.split(",") if t.strip()])
+            else:
+                if not year and not technologies and not _is_metadata_line(meta_line):
+                    description_lines.append(meta_line)
+            
             i += 1
+            metadata_lines_consumed += 1
 
-            while i < n and lines[i].strip() == "":
-                i += 1
-
-            # Requirement 3: the line immediately after the year is the tech/metadata
-            # line, not a new project — regardless of its content.
-            if i < n and not BULLET_PREFIX_PATTERN.match(lines[i].strip()):
-                tech_line = lines[i].strip()
-                # Requirement 4: strip trailing "| GitHub | Live Demo"-style metadata.
-                tech_part = tech_line.split("|")[0]
-                # Requirement 5: parse what's left as comma-separated technologies.
-                technologies = [t.strip() for t in tech_part.split(",") if t.strip()]
-                i += 1
-
-        # Requirements 6-7: collect bullets/description until the next project title.
         while i < n:
             if lines[i].strip() == "":
                 i += 1
@@ -301,8 +370,7 @@ def analyze_resume(text: str) -> dict:
         "education": [sections["education"]] if sections["education"] else [],
         "experience": [sections["experience"]] if sections["experience"] else [],
         "projects": _parse_projects(sections["projects"]),
-        "certifications": (
-            [sections["certifications"]] if sections["certifications"] else []
-        ),
-        "leadership": [sections["leadership"]] if sections["leadership"] else [],
+        "certifications": _parse_simple_list(sections["certifications"]),
+        "leadership": _parse_simple_list(sections["leadership"]),
+        "publications": _parse_simple_list(sections["publications"]),
     }

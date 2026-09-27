@@ -87,7 +87,7 @@ export default function SkillGap({ resumeData, jobData, setGlobalSkillsToImprove
       {gapResult && (
         <div className="analysis-results">
           
-          <div className="resume-quality-card">
+          <div className="recommendations-grid">
             <div className="card ats-score-card">
               <h3>Required Coverage</h3>
               <div className="score-display">
@@ -105,7 +105,7 @@ export default function SkillGap({ resumeData, jobData, setGlobalSkillsToImprove
             </div>
           </div>
 
-          <div className="resume-quality-card" style={{ gridTemplateColumns: '1fr 1fr' }}>
+          <div className="recommendations-grid">
             <div className="card">
               <h3>Matched Required Skills</h3>
               <div className="skills-container">
