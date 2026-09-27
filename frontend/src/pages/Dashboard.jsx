@@ -40,6 +40,7 @@ export default function Dashboard({ setActiveNav, atsScore, latestMatchScore, sk
             title="Interview Prep" 
             description="Practice interview questions and evaluate your answers." 
             buttonText="Start Practice" 
+            onClick={() => setActiveNav('interview')}
           />
           <ToolCard 
             title="Cover Letter" 

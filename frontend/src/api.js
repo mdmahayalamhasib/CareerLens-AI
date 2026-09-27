@@ -141,3 +141,78 @@ export async function getCareerRecommendations(skillGaps) {
     throw error;
   }
 }
+
+export async function generateInterviewQuestions(jobData, resumeData) {
+  try {
+    const response = await fetch(`${BASE_URL}/interview/questions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job_data: jobData, resume_data: resumeData }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during question generation.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') throw new Error('Unable to connect to the backend.');
+    throw error;
+  }
+}
+
+export async function evaluateInterviewAnswer(question, answer) {
+  try {
+    const response = await fetch(`${BASE_URL}/interview/evaluate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, answer }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during evaluation.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') throw new Error('Unable to connect to the backend.');
+    throw error;
+  }
+}
+
+export async function getInterviewSummary(evaluations) {
+  try {
+    const response = await fetch(`${BASE_URL}/interview/summary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ evaluations }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during summary generation.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') throw new Error('Unable to connect to the backend.');
+    throw error;
+  }
+}
