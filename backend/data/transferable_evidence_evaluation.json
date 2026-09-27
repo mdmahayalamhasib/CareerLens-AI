@@ -1,0 +1,76 @@
+{
+  "safety_rule_enforcement": "ML relevance does not change exact skill matching.",
+  "test_cases_evaluated": 7,
+  "results": [
+    {
+      "test_case_id": "CASE_1",
+      "missing_skill": "PostgreSQL",
+      "resume_evidence_tested": "Built applications using MySQL and complex SQL queries.",
+      "expected_classification": "transferable",
+      "actual_classification": "transferable",
+      "relevance_score": 0.7796012163162231,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_2",
+      "missing_skill": "Machine Learning",
+      "resume_evidence_tested": "Trained classification models using Python and scikit-learn.",
+      "expected_classification": "transferable",
+      "actual_classification": "transferable",
+      "relevance_score": 0.852566123008728,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_3",
+      "missing_skill": "REST API",
+      "resume_evidence_tested": "Built a FastAPI backend with HTTP endpoints.",
+      "expected_classification": "transferable",
+      "actual_classification": "transferable",
+      "relevance_score": 0.7638741731643677,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_4",
+      "missing_skill": "Kubernetes",
+      "resume_evidence_tested": "Containerized applications using Docker.",
+      "expected_classification": "related_but_not_equivalent",
+      "actual_classification": "related_but_not_equivalent",
+      "relevance_score": 0.7488569021224976,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_5",
+      "missing_skill": "React",
+      "resume_evidence_tested": "Built an Angular web application.",
+      "expected_classification": "related_but_not_equivalent",
+      "actual_classification": "related_but_not_equivalent",
+      "relevance_score": 0.8050763010978699,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_6",
+      "missing_skill": "Java",
+      "resume_evidence_tested": "Built a JavaScript web application.",
+      "expected_classification": "not_relevant",
+      "actual_classification": "not_relevant",
+      "relevance_score": 0.0,
+      "pass": true,
+      "explanation": "Passed"
+    },
+    {
+      "test_case_id": "CASE_7",
+      "missing_skill": "PostgreSQL",
+      "resume_evidence_tested": "Designed logos and branding materials.",
+      "expected_classification": "not_relevant",
+      "actual_classification": "not_relevant",
+      "relevance_score": 0.0,
+      "pass": true,
+      "explanation": "Passed"
+    }
+  ]
+}
