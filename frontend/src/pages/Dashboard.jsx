@@ -46,6 +46,7 @@ export default function Dashboard({ setActiveNav, atsScore, latestMatchScore, sk
             title="Cover Letter" 
             description="Create a tailored cover letter based on your resume and target job." 
             buttonText="Create Letter" 
+            onClick={() => setActiveNav('cover_letter')}
           />
         </div>
       </section>

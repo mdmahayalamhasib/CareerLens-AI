@@ -216,3 +216,28 @@ export async function getInterviewSummary(evaluations) {
     throw error;
   }
 }
+
+export async function generateCoverLetter(resumeData, jobData) {
+  try {
+    const response = await fetch(`${BASE_URL}/cover-letter/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ resume_data: resumeData, job_data: jobData }),
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during cover letter generation.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') throw new Error('Unable to connect to the backend.');
+    throw error;
+  }
+}

@@ -15,7 +15,7 @@ def create_cover_letter(resume_data: dict, job_data: dict) -> dict:
 
     job_title = job_data.get("job_title", "").strip()
     if not job_title:
-        job_title = "the open position"
+        job_title = "open"
 
     # Match skills
     resume_skills_raw = resume_data.get("skills", [])
@@ -77,20 +77,23 @@ def create_cover_letter(resume_data: dict, job_data: dict) -> dict:
     # Formatting projects string
     if len(projects_highlighted) == 1:
         projects_str = projects_highlighted[0]
+        project_word = "project demonstrates"
     elif len(projects_highlighted) == 2:
         projects_str = f"{projects_highlighted[0]} and {projects_highlighted[1]}"
+        project_word = "projects demonstrate"
     else:
         projects_str = ""
+        project_word = "projects demonstrate"
 
     # Generate content based on template
     body = ""
     if template_used == "technical_project_focused":
         body = (
             f"Dear Hiring Manager,\n\n"
-            f"I am writing to express my strong interest in {job_title}. "
+            f"I am writing to express my strong interest in the {job_title} position. "
             f"Based on the job requirements, my technical background strongly aligns with your needs.\n\n"
             f"Specifically, my proficiency in {skills_str} has allowed me to build impactful solutions. "
-            f"For example, my work on the {projects_str} project(s) demonstrates my ability to apply these technologies effectively to solve real-world problems.\n\n"
+            f"For example, my work on the {projects_str} {project_word} my ability to apply these technologies effectively to solve real-world problems.\n\n"
             f"I would welcome the opportunity to discuss how my skills and experience can contribute to your team's success. "
             f"Thank you for considering my application.\n\n"
             f"Sincerely,\n{candidate_name}"
@@ -100,7 +103,7 @@ def create_cover_letter(resume_data: dict, job_data: dict) -> dict:
     elif template_used == "skills_focused":
         body = (
             f"Dear Hiring Manager,\n\n"
-            f"I am writing to express my strong interest in {job_title}. "
+            f"I am writing to express my strong interest in the {job_title} position. "
             f"My technical background and enthusiasm for software development make me a strong candidate for this role.\n\n"
             f"Through my experience, I have developed a solid foundation in key technologies required for this position, including {skills_str}. "
             f"I am confident in my ability to quickly adapt and contribute effectively to your team's ongoing projects.\n\n"
@@ -113,7 +116,7 @@ def create_cover_letter(resume_data: dict, job_data: dict) -> dict:
     else:
         body = (
             f"Dear Hiring Manager,\n\n"
-            f"I am writing to express my strong interest in {job_title}. "
+            f"I am writing to express my strong interest in the {job_title} position. "
             f"I am passionate about building high-quality solutions and am eager to bring my dedication to your team.\n\n"
             f"My background has equipped me with a strong foundation in problem-solving and collaboration. "
             f"I am highly motivated to leverage my skills and continue growing as a professional within your organization.\n\n"

@@ -7,6 +7,7 @@ import ResumeAnalysis from './pages/ResumeAnalysis';
 import JobMatcher from './pages/JobMatcher';
 import SkillGap from './pages/SkillGap';
 import InterviewPrep from './pages/InterviewPrep';
+import CoverLetter from './pages/CoverLetter';
 
 function App() {
   const [activeNav, setActiveNav] = useState('dashboard');
@@ -39,6 +40,8 @@ function App() {
           <SkillGap resumeData={globalResumeData} jobData={globalJobData} setGlobalSkillsToImprove={setGlobalSkillsToImprove} setActiveNav={setActiveNav} />
         ) : activeNav === 'interview' ? (
           <InterviewPrep resumeData={globalResumeData} jobData={globalJobData} setActiveNav={setActiveNav} />
+        ) : activeNav === 'cover_letter' ? (
+          <CoverLetter resumeData={globalResumeData} jobData={globalJobData} setActiveNav={setActiveNav} />
         ) : (
           <div className="placeholder-content">
             <h2>{activeNav.charAt(0).toUpperCase() + activeNav.slice(1).replace('_', ' ')}</h2>
