@@ -20,11 +20,13 @@ KNOWN_SKILLS = [
     "Python", "JavaScript", "TypeScript", "Java", "PHP", "SQL", "R",
     "FastAPI", "Django", "Flask", "React", "Next.js", "Vue", "Angular",
     "Node.js", "Express",
-    "PostgreSQL", "MySQL", "MongoDB", "SQLite", "Redis",
+    "PostgreSQL", "MySQL", "MongoDB", "SQLite", "Redis", "SQL Server",
     "Docker", "Kubernetes", "AWS", "Azure", "GCP",
     "Git", "GitHub", "REST API", "GraphQL", "WebSockets", "JWT",
     "Tailwind CSS", "HTML", "CSS",
     "TensorFlow", "PyTorch", "Scikit-learn", "Pandas", "NumPy",
+    ".NET", ".NET Core", "ASP.NET Core", "ASP.NET Web API", "C#", "Blazor",
+    ".NET MAUI", "AvaloniaUI", "Entity Framework"
 ]
 
 # alias (lowercase, as it might appear in text) -> canonical name.
@@ -35,7 +37,6 @@ SKILL_ALIASES = {
     "postgresql": "PostgreSQL",
     "js": "JavaScript",
     "javascript": "JavaScript",
-    "ts": "TypeScript",
     "typescript": "TypeScript",
     "node": "Node.js",
     "nodejs": "Node.js",
@@ -44,10 +45,19 @@ SKILL_ALIASES = {
     "rest apis": "REST API",
     "restful api": "REST API",
     "restful apis": "REST API",
+    "net 8": ".NET",
+    "net 9": ".NET",
+    "net 10": ".NET",
+    "asp.net core": "ASP.NET Core",
+    "asp.net web api": "ASP.NET Web API",
+    ".net blazor": "Blazor",
+    "maui": ".NET MAUI",
+    "ms sql": "SQL Server",
+    "ef": "Entity Framework",
 }
 
 # Build the full lookup: canonical names map to themselves, plus aliases.
-SKILL_LOOKUP: dict[str, str] = {name: name for name in KNOWN_SKILLS}
+SKILL_LOOKUP: dict[str, str] = {name.lower(): name for name in KNOWN_SKILLS}
 SKILL_LOOKUP.update(SKILL_ALIASES)
 
 
@@ -71,19 +81,37 @@ def _find_known_skills(text: str) -> list[str]:
     """
     Scan `text` for any known skill (or alias) and return the canonical
     names found, ordered by where they first appear in the text.
+    Avoids duplicate subsets (e.g. '.NET' inside '.NET Core') by tracking overlap.
     """
     if not text:
         return []
 
-    first_position: dict[str, int] = {}
+    # Collect all matches: (canonical, start, end)
+    all_matches = []
     for term, canonical in SKILL_LOOKUP.items():
-        match = _SKILL_PATTERNS[term].search(text)
-        if match:
-            pos = match.start()
-            if canonical not in first_position or pos < first_position[canonical]:
-                first_position[canonical] = pos
+        for match in _SKILL_PATTERNS[term].finditer(text):
+            all_matches.append((canonical, match.start(), match.end()))
+            
+    # Sort matches by length of the match (longest first)
+    all_matches.sort(key=lambda x: x[2] - x[1], reverse=True)
+    
+    accepted_spans = []
+    canonical_first_pos = {}
+    
+    for canonical, start, end in all_matches:
+        # Check if this match overlaps with any already-accepted (longer) match
+        overlap = False
+        for a_start, a_end in accepted_spans:
+            if start < a_end and end > a_start:
+                overlap = True
+                break
+        
+        if not overlap:
+            accepted_spans.append((start, end))
+            if canonical not in canonical_first_pos or start < canonical_first_pos[canonical]:
+                canonical_first_pos[canonical] = start
 
-    return [name for name, _ in sorted(first_position.items(), key=lambda kv: kv[1])]
+    return [name for name, _ in sorted(canonical_first_pos.items(), key=lambda kv: kv[1])]
 
 
 def _normalize_skill(raw_skill: str) -> str:
@@ -101,15 +129,26 @@ def _normalize_skill(raw_skill: str) -> str:
 # ---------------------------------------------------------------------------
 
 JD_SECTION_HEADINGS = {
-    "required_skills": ["requirements", "required skills", "must have", "must-have"],
+    "required_skills": [
+        "requirements", "required skills", "must have", "must-have",
+        "requirements & qualifications", "additional requirements",
+        "skills & expertise", "other relevant skills", "skills", "technical skills"
+    ],
     "preferred_skills": [
         "preferred",
         "preferred skills",
         "nice to have",
         "nice-to-have",
     ],
-    "responsibilities": ["responsibilities", "key responsibilities", "duties"],
-    "qualifications": ["qualifications", "education requirements"],
+    "responsibilities": [
+        "responsibilities", "key responsibilities", "duties",
+        "responsibilities & context", "duties & responsibilities",
+        "job responsibilities"
+    ],
+    "qualifications": [
+        "qualifications", "education requirements", "requirements & qualifications",
+        "education", "academic requirements"
+    ],
 }
 
 BULLET_PREFIX_PATTERN = re.compile(r"^[•▪◦·*-]\s*")
@@ -122,16 +161,28 @@ EXPERIENCE_PATTERN = re.compile(
 
 
 def _matches_jd_heading(lower_line: str) -> str | None:
-    cleaned = lower_line.strip(" :\t")
+    cleaned = lower_line.strip(" :	")
+    if len(cleaned) > 50:
+        return None
+        
+    # First pass: exact match
     for section_key, variants in JD_SECTION_HEADINGS.items():
         if cleaned in variants:
             return section_key
+            
+    # Second pass: substring match
+    for section_key, variants in JD_SECTION_HEADINGS.items():
+        for variant in variants:
+            if variant in cleaned and len(cleaned) < len(variant) + 20:
+                return section_key
+                
     return None
 
 
 def _split_jd_sections(lines: list[str]) -> dict[str, str]:
     sections: dict[str, list[str]] = {key: [] for key in JD_SECTION_HEADINGS}
-    current_section = None
+    sections["intro"] = []
+    current_section = "intro"
 
     for line in lines:
         lower = line.strip().lower()
@@ -149,12 +200,62 @@ def _bullets_to_list(block: str) -> list[str]:
     """Turn a raw section block into a list of cleaned bullet/line strings."""
     if not block:
         return []
+        
+    lines_raw = block.splitlines()
+    lines_clean = [line.strip() for line in lines_raw if line.strip()]
+    if not lines_clean:
+        return []
+        
+    has_bullets = any(BULLET_PREFIX_PATTERN.match(line) for line in lines_clean)
+    max_len = max(len(line) for line in lines_clean)
+    
     items = []
-    for line in block.splitlines():
-        cleaned = BULLET_PREFIX_PATTERN.sub("", line.strip())
-        if cleaned:
+    force_new_item = False
+    for line in lines_raw:
+        stripped = line.strip()
+        if not stripped:
+            force_new_item = True
+            continue
+            
+        is_bullet = bool(BULLET_PREFIX_PATTERN.match(stripped))
+        cleaned = BULLET_PREFIX_PATTERN.sub("", stripped)
+        
+        if is_bullet or not items or force_new_item:
             items.append(cleaned)
+            force_new_item = False
+        else:
+            if has_bullets:
+                # If section uses bullets, any non-bulleted line is a continuation
+                items[-1] = items[-1] + " " + cleaned
+            else:
+                prev_item = items[-1]
+                is_independent = cleaned and cleaned[0].isupper() and cleaned.endswith('.')
+                
+                if prev_item.endswith(('.', '!', '?', ':', ';')):
+                    items.append(cleaned)
+                elif cleaned and cleaned[0].islower():
+                    items[-1] = items[-1] + " " + cleaned
+                elif prev_item.endswith((',', '-', ' and', ' or', ' with', ' the', ' a', ' in', ' for', ' to', ' of')):
+                    items[-1] = items[-1] + " " + cleaned
+                elif max_len > 40 and len(prev_item) >= max_len - 15 and not is_independent:
+                    items[-1] = items[-1] + " " + cleaned
+                elif len(prev_item.split()) <= 2 and ":" not in prev_item:
+                    items[-1] = items[-1] + ": " + cleaned
+                else:
+                    items.append(cleaned)
+                    
     return items
+
+def _extract_education_fallback(text: str) -> list[str]:
+    """Fallback to find BSc, MSc, Computer Science, etc. anywhere in the text."""
+    found = []
+    edu_pattern = re.compile(r"\b(BSc|MSc|Ph\.?D|Bachelor|Master|Degree)\b[^.!?\n]*?(Computer Science|CS|CSE|Engineering|IT|Information Technology)[^.!?\n]*", re.IGNORECASE)
+    for line in text.splitlines():
+        if edu_pattern.search(line):
+            cleaned = BULLET_PREFIX_PATTERN.sub("", line.strip())
+            if cleaned not in found:
+                found.append(cleaned)
+    return found
 
 
 # ---------------------------------------------------------------------------
@@ -197,37 +298,43 @@ PREFERRED_PHRASES = [
 
 def _guess_job_title(lines: list[str], full_text: str) -> str | None:
     """
-    1. Check explicit phrases like "We are looking for a ... Developer.",
-       "Hiring: ...", or "Position: ..." against the FIRST non-empty line
-       first — this is where such a phrase most reliably names just the
-       title, without also pulling in a later, unrelated sentence.
-    2. If the first line is short and has no such phrase, it's likely
-       already just the title (e.g. a heading line above a structured JD) —
-       use it as-is.
-    3. If the first line is a long paragraph with no explicit phrase in it,
-       check the whole text for one of these phrases (it may appear later).
-    4. If nothing matches, use the first sentence of that paragraph instead
-       of giving up and returning None.
+    1. Check explicit phrases like "We are looking for a ... Developer."
+    2. Handle PDF line wrapping by reading lines until a blank line, a known
+       metadata field, or a heading is encountered.
     """
-    first_nonempty = None
+    title_lines = []
     for line in lines:
         stripped = line.strip()
-        if stripped:
-            first_nonempty = stripped
-            break
+        if not stripped:
+            if title_lines:
+                break
+            continue
+            
+        lower = stripped.lower()
+        if any(lower.startswith(field) for field in ["vacancy:", "vacancy", "age:", "location:", "salary:", "experience:", "published:"]):
+            if title_lines:
+                break
+                
+        if _matches_jd_heading(lower):
+            if title_lines:
+                break
+                
+        title_lines.append(stripped)
 
-    if first_nonempty is None:
+    if not title_lines:
         return None
 
+    merged_top = " ".join(title_lines)
+
     for pattern in JOB_TITLE_PATTERNS:
-        match = pattern.search(first_nonempty)
+        match = pattern.search(merged_top)
         if match:
             candidate = match.group(1).strip().strip(":,")
             if candidate:
                 return candidate
 
-    if len(first_nonempty) <= 100:
-        return first_nonempty
+    if len(merged_top) <= 150:
+        return merged_top
 
     for pattern in JOB_TITLE_PATTERNS:
         match = pattern.search(full_text)
@@ -236,8 +343,8 @@ def _guess_job_title(lines: list[str], full_text: str) -> str | None:
             if candidate:
                 return candidate
 
-    first_sentence = SENTENCE_SPLIT_PATTERN.split(first_nonempty, maxsplit=1)[0].strip()
-    return first_sentence if first_sentence else first_nonempty[:100].strip()
+    first_sentence = SENTENCE_SPLIT_PATTERN.split(merged_top, maxsplit=1)[0].strip()
+    return first_sentence if first_sentence else merged_top[:100].strip()
 
 
 def _extract_experience_requirements(text: str) -> list[str]:
@@ -292,27 +399,17 @@ def _extract_skills_from_sentences(text: str) -> tuple[list[str], list[str]]:
 
 
 def analyze_job_description(job_description: str) -> dict:
-    """
-    Convert raw job description text into a structured dict:
-    job_title, required_skills, preferred_skills, responsibilities,
-    qualifications, experience_requirements.
-
-    Supports two styles:
-    1. Structured JDs with recognizable section headings (Requirements,
-       Preferred, Responsibilities, Qualifications) — parsed first.
-    2. Plain-paragraph JDs with no headings — for whichever of
-       required_skills/preferred_skills came back empty from heading-based
-       parsing, a sentence-level fallback looks for common requirement-
-       signaling phrases (see REQUIRED_PHRASES/PREFERRED_PHRASES).
-
-    Still rule-based: relies on a fixed skill vocabulary and a fixed set of
-    trigger phrases, so it won't catch every possible phrasing or skill.
-    """
     lines = job_description.splitlines()
     sections = _split_jd_sections(lines)
 
     required_skills = _find_known_skills(sections["required_skills"])
     preferred_skills = _find_known_skills(sections["preferred_skills"])
+    
+    # Skills in the intro (like the job title) should be considered required skills
+    intro_skills = _find_known_skills(sections.get("intro", ""))
+    for skill in intro_skills:
+        if skill not in required_skills:
+            required_skills.append(skill)
 
     if not required_skills or not preferred_skills:
         fallback_required, fallback_preferred = _extract_skills_from_sentences(
@@ -323,15 +420,21 @@ def analyze_job_description(job_description: str) -> dict:
         if not preferred_skills:
             preferred_skills = fallback_preferred
 
+    # Deduplicate: if a skill is in required, it should not be in preferred
+    preferred_skills = [skill for skill in preferred_skills if skill not in required_skills]
+
+    qualifications = _bullets_to_list(sections["qualifications"])
+    if not qualifications:
+        qualifications = _extract_education_fallback(job_description)
+
     return {
         "job_title": _guess_job_title(lines, job_description),
         "required_skills": required_skills,
         "preferred_skills": preferred_skills,
         "responsibilities": _bullets_to_list(sections["responsibilities"]),
-        "qualifications": _bullets_to_list(sections["qualifications"]),
+        "qualifications": qualifications,
         "experience_requirements": _extract_experience_requirements(job_description),
     }
-
 
 def match_resume_to_job(resume_data: dict, job_data: dict) -> dict:
     """

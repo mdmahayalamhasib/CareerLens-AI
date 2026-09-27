@@ -241,3 +241,32 @@ export async function generateCoverLetter(resumeData, jobData) {
     throw error;
   }
 }
+
+
+export async function analyzeJobPdf(file, resumeData) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('resume_data', JSON.stringify(resumeData));
+
+  try {
+    const response = await fetch(`${BASE_URL}/job/analyze-upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      let errorMessage = 'An error occurred during job description upload.';
+      try {
+        const errData = await response.json();
+        errorMessage = errData.detail || errorMessage;
+      } catch (e) {
+        errorMessage = `HTTP Error: ${response.status}`;
+      }
+      throw new Error(errorMessage);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error.name === 'TypeError') throw new Error('Unable to connect to the backend.');
+    throw error;
+  }
+}

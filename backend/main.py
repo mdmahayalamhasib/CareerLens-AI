@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel, field_validator
 
 from resume_parser import (
@@ -247,6 +247,79 @@ async def analyze_job(request: JobAnalyzeRequest):
     return {
         "job": job_data,
         "match": match_result,
+    }
+
+
+@app.post("/job/analyze-upload")
+async def analyze_job_upload(
+    file: UploadFile = File(...),
+    resume_data: str = Form(...)
+):
+    import json
+    try:
+        resume_data_dict = json.loads(resume_data)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid resume_data JSON")
+
+    # Check file extension
+    if not file.filename.lower().endswith((".pdf", ".docx")):
+        raise HTTPException(
+            status_code=400,
+            detail="Only .pdf and .docx files are supported.",
+        )
+
+    # Read uploaded file
+    file_bytes = await file.read()
+
+    # Check file size
+    if len(file_bytes) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail="File too large. Maximum size is 5MB.",
+        )
+
+    # Check empty file
+    if len(file_bytes) == 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file is empty.",
+        )
+
+    # Extract text
+    try:
+        extracted_text = extract_text(
+            file.filename,
+            file_bytes,
+        )
+    except UnsupportedFileTypeError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e),
+        )
+    except EmptyResumeError:
+        raise HTTPException(
+            status_code=422,
+            detail="This file does not contain readable text. Please upload a text-based job description file or paste the job description manually.",
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=422,
+            detail="Could not process this file. It may be corrupted.",
+        )
+
+    # Analyze job description
+    job_data = analyze_job_description(extracted_text)
+
+    # Match resume against analyzed job
+    match_result = match_resume_to_job(
+        resume_data_dict,
+        job_data,
+    )
+
+    return {
+        "job": job_data,
+        "match": match_result,
+        "extracted_text": extracted_text,
     }
 
 

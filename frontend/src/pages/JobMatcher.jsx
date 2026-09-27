@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { analyzeJob } from '../api';
+import { analyzeJob, analyzeJobPdf } from '../api';
 import JobMatchCard from '../components/JobMatchCard';
 
 export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJobData, setActiveNav }) {
   const [jobDescription, setJobDescription] = useState('');
+  const [pdfFile, setPdfFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
@@ -29,8 +30,8 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJ
   }
 
   const handleAnalyze = async () => {
-    if (!jobDescription.trim()) {
-      setError('Please enter a job description.');
+    if (!jobDescription.trim() && !pdfFile) {
+      setError('Please enter a job description or upload a PDF.');
       return;
     }
     
@@ -39,7 +40,13 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJ
     setResult(null);
 
     try {
-      const data = await analyzeJob(jobDescription, resumeData);
+      let data;
+      if (pdfFile) {
+        data = await analyzeJobPdf(pdfFile, resumeData);
+      } else {
+        data = await analyzeJob(jobDescription, resumeData);
+      }
+
       setResult(data);
       if (setLatestMatchScore && data.match) {
         setLatestMatchScore(data.match.match_score);
@@ -54,6 +61,26 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJ
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type !== 'application/pdf') {
+        setError('Only PDF files are supported for Job Description uploads.');
+        e.target.value = null;
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError('File is too large. Maximum size is 5MB.');
+        e.target.value = null;
+        return;
+      }
+      setPdfFile(file);
+      setJobDescription('');
+      setError(null);
+    }
+  };
+
+
   return (
     <div className="resume-analysis-page">
       <header className="page-header">
@@ -62,31 +89,68 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJ
       </header>
 
       <section className="card" style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <h3 style={{ margin: 0 }}>Job Description</h3>
-          <span className="upload-help">{jobDescription.length} characters</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h3 style={{ margin: 0 }}>Provide Job Description</h3>
         </div>
         
-        <textarea
-          className="job-textarea"
-          value={jobDescription}
-          onChange={(e) => { setJobDescription(e.target.value); setError(null); }}
-          placeholder="Paste the job description here..."
-          disabled={loading}
-          rows={10}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
+          
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <label style={{ fontWeight: '600' }}>Paste Text</label>
+              <span className="upload-help">{jobDescription.length} characters</span>
+            </div>
+            <textarea
+              className="job-textarea"
+              value={jobDescription}
+              onChange={(e) => { setJobDescription(e.target.value); setPdfFile(null); setError(null); }}
+              placeholder="Paste the job description here..."
+              disabled={loading}
+              rows={6}
+            />
+          </div>
 
-        {error && <div className="error-message" style={{ marginTop: '1rem' }}>{error}</div>}
+          <div style={{ textAlign: 'center', fontWeight: 'bold', color: 'var(--text-muted)' }}>
+            OR
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Upload Job Description PDF</label>
+            <div style={{ border: '2px dashed var(--border-color)', borderRadius: '6px', padding: '1.5rem', textAlign: 'center', backgroundColor: '#f8fafc' }}>
+               <input 
+                 type="file" 
+                 accept=".pdf" 
+                 onChange={handleFileChange}
+                 disabled={loading}
+                 style={{ maxWidth: '100%' }}
+               />
+               {pdfFile && <p style={{ marginTop: '0.75rem', color: 'var(--primary-color)', fontWeight: '600' }}>Selected file: {pdfFile.name}</p>}
+            </div>
+          </div>
+
+        </div>
+
+        {error && <div className="error-message" style={{ marginTop: '1rem', marginBottom: '1rem' }}>{error}</div>}
 
         <button 
           className="btn-primary" 
-          style={{ marginTop: '1rem' }}
           onClick={handleAnalyze} 
-          disabled={!jobDescription.trim() || loading}
+          disabled={(!jobDescription.trim() && !pdfFile) || loading}
         >
           {loading ? 'Analyzing job match...' : 'Analyze Job'}
         </button>
       </section>
+      
+      {result && result.extracted_text && (
+        <section className="card" style={{ marginBottom: '2rem', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+          <h3 style={{ color: '#166534', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span>✓</span> Job description extracted successfully
+          </h3>
+          <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'white', borderRadius: '4px', border: '1px solid #e2e8f0', maxHeight: '200px', overflowY: 'auto', whiteSpace: 'pre-wrap', fontSize: '0.9rem', color: '#334155' }}>
+            {result.extracted_text}
+          </div>
+        </section>
+      )}
 
       {result && result.match && result.job && (
         <div className="analysis-results">
