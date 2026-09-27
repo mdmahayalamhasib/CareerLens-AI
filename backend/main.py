@@ -149,6 +149,24 @@ class CoverLetterRequest(BaseModel):
         return value
 
 
+class SemanticRelevanceRequest(BaseModel):
+    job_requirement: str
+    resume_context: str
+
+    @field_validator('job_requirement')
+    @classmethod
+    def check_job_req(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError('job_requirement cannot be empty')
+        return v
+        
+    @field_validator('resume_context')
+    @classmethod
+    def check_resume_ctx(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError('resume_context cannot be empty')
+        return v
+
 class ResumeQualityRequest(BaseModel):
     resume_data: dict
 
@@ -404,3 +422,15 @@ async def analyze_resume_quality_endpoint(request: ResumeQualityRequest):
     )
     
     return result
+@app.post("/ml/relevance")
+async def analyze_semantic_relevance(request: SemanticRelevanceRequest):
+    try:
+        from ml.relevance_api import analyze_relevance
+        result = analyze_relevance(request.job_requirement, request.resume_context)
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to analyze semantic relevance."
+        )
+

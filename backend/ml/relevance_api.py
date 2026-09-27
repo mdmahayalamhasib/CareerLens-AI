@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from relevance_model import calculate_relevance
+from .relevance_model import calculate_relevance
 
 def analyze_relevance(job_requirement: str, resume_context: str) -> Dict[str, Any]:
     """

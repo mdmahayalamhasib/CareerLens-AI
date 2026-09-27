@@ -1,6 +1,6 @@
 import unittest
-from relevance_model import load_relevance_model, calculate_relevance, RELEVANCE_THRESHOLD
-from relevance_api import analyze_relevance
+from .relevance_model import load_relevance_model, calculate_relevance, RELEVANCE_THRESHOLD
+from .relevance_api import analyze_relevance
 
 class TestRelevanceModel(unittest.TestCase):
     
