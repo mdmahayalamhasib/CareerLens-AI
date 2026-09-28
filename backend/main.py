@@ -262,9 +262,18 @@ async def analyze_job(request: JobAnalyzeRequest):
         job_data,
     )
 
+    transferable_evidence = []
+    try:
+        from ml.job_transferable_evidence import analyze_job_transferable_evidence
+        missing_skills = match_result.get("missing_skills", [])
+        transferable_evidence = analyze_job_transferable_evidence(missing_skills, request.resume_data)
+    except Exception as e:
+        print(f"Failed to analyze transferable evidence: {e}")
+
     return {
         "job": job_data,
         "match": match_result,
+        "transferable_evidence": transferable_evidence
     }
 
 
@@ -334,9 +343,18 @@ async def analyze_job_upload(
         job_data,
     )
 
+    transferable_evidence = []
+    try:
+        from ml.job_transferable_evidence import analyze_job_transferable_evidence
+        missing_skills = match_result.get("missing_skills", [])
+        transferable_evidence = analyze_job_transferable_evidence(missing_skills, resume_data_dict)
+    except Exception as e:
+        print(f"Failed to analyze transferable evidence: {e}")
+
     return {
         "job": job_data,
         "match": match_result,
+        "transferable_evidence": transferable_evidence,
         "extracted_text": extracted_text,
     }
 
