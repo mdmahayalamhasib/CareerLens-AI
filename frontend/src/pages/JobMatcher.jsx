@@ -184,6 +184,61 @@ export default function JobMatcher({ resumeData, setLatestMatchScore, setGlobalJ
             </div>
           </div>
 
+          {result.transferable_evidence && result.transferable_evidence.length > 0 && (
+            <section className="card" style={{ marginBottom: '2rem', backgroundColor: '#f8fafc', borderLeft: '4px solid #3b82f6' }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1e40af' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                Transferable Evidence
+              </h3>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+                Transferable evidence indicates potentially relevant experience. It does not confirm that the missing skill is present.
+              </p>
+              <div className="list-container">
+                {result.transferable_evidence.map((evidence, idx) => {
+                  let badgeText = "Not Relevant";
+                  let badgeColor = "#94a3b8";
+                  let badgeBg = "#f1f5f9";
+                  
+                  if (evidence.classification === 'transferable') {
+                    badgeText = "Potentially Transferable";
+                    badgeColor = "#047857";
+                    badgeBg = "#d1fae5";
+                  } else if (evidence.classification === 'related_but_not_equivalent') {
+                    badgeText = "Related, but Not Equivalent";
+                    badgeColor = "#b45309";
+                    badgeBg = "#fef3c7";
+                  }
+
+                  const scorePct = evidence.relevance_score != null ? Math.round(evidence.relevance_score * 100) : 0;
+                  
+                  return (
+                    <div key={idx} className="list-item" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1.25rem', backgroundColor: 'white', border: '1px solid #e2e8f0', marginBottom: '1rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <div>
+                          <strong style={{ fontSize: '1.1rem', color: '#0f172a' }}>Missing Skill: {evidence.skill || 'Unknown'}</strong>
+                          <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: '600' }}>
+                            Source: {evidence.source_type || 'Resume'} - {evidence.source_title || 'Untitled'}
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#475569' }}>
+                            Relevance: {scorePct}%
+                          </span>
+                          <span style={{ backgroundColor: badgeBg, color: badgeColor, padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: '600', whiteSpace: 'nowrap' }}>
+                            {badgeText}
+                          </span>
+                        </div>
+                      </div>
+                      <p style={{ marginTop: '0.5rem', color: '#334155', lineHeight: '1.5' }}>
+                        "{evidence.evidence_text || 'No description available.'}"
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
           <section className="card">
             <h3>Match Summary</h3>
             <p style={{ marginTop: '0.5rem', lineHeight: '1.6' }}>{result.match.summary}</p>
